@@ -1,0 +1,6 @@
+{
+  "testing.autoOpenPeekView": "never",
+  "testing.openTesting": "never",
+  "testing.autoRun": "off",
+  "testing.automaticallyOpenTestResults": "never"
+}
