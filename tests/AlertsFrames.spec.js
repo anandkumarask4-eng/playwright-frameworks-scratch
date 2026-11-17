@@ -1,32 +1,25 @@
-import{test, expect} from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test('alert handle frames',async({page}) =>{
+test('alert handle frames', async ({ page }) => {
+  await page.goto('https://www.hyrtutorials.com/p/alertsdemo.html');
 
-    await page.goto('https://www.hyrtutorials.com/p/alertsdemo.html');
+  page.once('dialog', async (dialog) => {
+    expect(dialog.message()).toContain('I am an alert box!');
+    await dialog.dismiss();
+  });
+  await page.locator('#alertBox').click();
 
-    //alert box
+  page.once('dialog', async (dialog) => {
+    expect(dialog.message()).toContain('Press a button!');
+    await dialog.dismiss();
+  });
+  await page.locator('#confirmBox').click();
 
-    page.on('dialog', async dialog=>{
-        if(dialog.type() ==='alert'){
-            expect(dialog.message()).toContain('I am an alert box!');
-            await dialog.dismiss();
-        }
-//confirm box
-        else if(dialog.type() === 'confirm'){
-            expect(dialog.message()).toContain('Press a button!');
-            await dialog.dismiss();
-        }
+  page.once('dialog', async (dialog) => {
+    expect(dialog.message()).toContain('Please enter your name:');
+    await dialog.accept('Anand');
+  });
+  await page.locator('#promptBox').click();
 
-//promptBox
-        else if(dialog.type() === 'prompt'){
-            expect(dialog.message()).toContain('Please enter your name:');
-            await dialog.accept('Anand');
-           // await dialog.dismiss();
-        }
-    })
-    await page.click('#alertBox');
-    await page.click('#confirmBox');
-
-    await page.click('#promptBox');
-    await page.waitForTimeout(5000);
-})
+  await page.waitForTimeout(1000);
+});

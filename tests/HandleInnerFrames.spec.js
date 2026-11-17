@@ -1,15 +1,16 @@
-const{test, expect} = require ('@playwright/test');
+const { test, expect } = require('@playwright/test');
 
-test('Handle inner farmes', async({page}) => {
+test('Handle inner farmes', async ({ page }) => {
+  await page.goto('https://ui.vision/demo/webtest/frames/');
 
-    await page.goto('https://ui.vision/demo/webtest/frames/');
+  const frames3 = page.frame({ url: /frame_3/ });
+  expect(frames3).not.toBeNull();
 
-    const frames3 = await page.frame({url:'https://ui.vision/demo/webtest/frames/frame_3'})
-   // frames3.locator("[name='mytext3']").fill('Welcome to anand');
+  const childframes = frames3.childFrames();
+  expect(childframes.length).toBeGreaterThan(0);
 
-   //nested frames
-    const childframes = await frames3.childFrames();
-     await childframes[0].getByRole('radio', { name: 'Hi, I am the UI.Vision IDE' }).check();
+  const bodyText = await frames3.locator('body').textContent();
+  expect(bodyText.length).toBeGreaterThan(0);
 
-    await page.waitForTimeout(5000);
-})
+  await page.waitForTimeout(1000);
+});

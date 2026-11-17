@@ -5,23 +5,18 @@ import { CartPage } from '../pages/CartPage';
 
 test('Verify the test login', async({page}) =>{
 
-    //create object
     const loged = new LoginPage(page);
     await loged.gotoLoginPage();
     await loged.login('pavanol', 'test@123');
-    await page.waitForTimeout(3000);
 
-
-    // HomePage
     const home = new HomePage(page);
-    await home.addProductToCart("Nexus 6");
-    await page.waitForTimeout(3000);
+    await home.addProductToCart('Nexus 6');
     await home.gotoAddCart();
+    await page.waitForURL(/cart\.html/, { timeout: 15000 });
 
-    // cart
-  const cart = new CartPage(page);
-  await page.waitForTimeout(3000);
-  const status = await cart.checkProductInCart('Nexus 6');
-  expect(status).toBe(true);
+    const cart = new CartPage(page);
+    await expect(page.locator('#tbodyid')).toBeVisible();
+    const status = await cart.checkProductInCart('Nexus 6');
+    expect(status).toBe(true);
 
 })
