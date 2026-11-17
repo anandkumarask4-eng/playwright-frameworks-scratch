@@ -1,20 +1,19 @@
-import{test, expect} from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test("Handle Hidden drpDown", async({page}) =>{
+test('Handle Hidden drpDown', async ({ page }) => {
+  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  await page.getByPlaceholder('Username').fill('Admin');
+  await page.getByPlaceholder('Password').fill('admin123');
+  await page.getByRole('button', { name: 'Login' }).click();
 
-    await page.getByPlaceholder('username').fill('Admin');
-    await page.getByPlaceholder('password').fill('admin123');
+  await page.getByRole('link', { name: 'Admin' }).click();
+  await page.getByRole('button', { name: 'Add' }).click();
 
-    await page.getByRole('button', {name:' Login '}).click();
+  const userRoleDropdown = page.locator('.oxd-select-text').first();
+  await userRoleDropdown.click();
+  await page.getByRole('option', { name: 'Admin' }).click();
 
-     await page.getByText('PIM', { exact: true }).click();
-
-    // //click on drop
-     await page.locator("//div[contains(@class,'oxd-select-text-input') and contains(text(),'Automation Job Title 1785838510761188')]").click();
-
-   
-})
-
+  await expect(userRoleDropdown).toContainText('Admin');
+});
 

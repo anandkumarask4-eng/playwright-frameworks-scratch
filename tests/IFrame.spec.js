@@ -1,11 +1,14 @@
 import { test, expect } from '@playwright/test';
 
-// iframe is a HTML document that embded another webpages inside the current webpages.
-//element inside the iframe belong to different document. we cannot interact wih direct
-// using to page object. in playwright we use framelocator() or contentframe() to access to iframe
-//before interacting with Element.
+// iframe is a HTML document that embeds another webpage inside the current page.
+// Elements inside an iframe belong to a different document, so we must use frameLocator() or frame().
 
-test('handle is frame', async({page}) =>{
+test('handle is frame', async ({ page }) => {
+  await page.goto('https://www.hyrtutorials.com/p/frames-practice.html');
 
-    await page.goto('')
-})
+  const frames = page.frames();
+  expect(frames.length).toBeGreaterThan(0);
+
+  const frame = frames[0];
+  await expect(frame.locator('body')).toBeVisible();
+});

@@ -10,7 +10,7 @@ test('OrangeHRM login and logout flow', async ({ page }) => {
   await page.getByRole('button', { name: 'Login' }).click();
 
   await expect(page).toHaveURL(/\/dashboard/);
-  await expect(page.getByText('Dashboard')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
   await page.locator('.oxd-userdropdown-tab').click();
   await page.getByRole('menuitem', { name: 'Logout' }).click();

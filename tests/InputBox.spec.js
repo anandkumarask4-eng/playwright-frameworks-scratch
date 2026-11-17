@@ -1,29 +1,15 @@
-import { test, expect } from "allure-playwright";
+import { test, expect } from '@playwright/test';
 
-test('Input field assertion', async ({page}) =>{
+test('Input field assertion', async ({ page }) => {
+  await page.goto('https://www.hyrtutorials.com/p/basic-controls.html');
 
-    await page.goto('https://www.hyrtutorials.com/p/basic-controls.html');
+  const firstName = page.locator('#firstName');
 
-    const firstName = page.locator('#firstName');
+  await expect(firstName).toBeVisible();
+  await expect(firstName).toBeEmpty();
+  await expect(firstName).toBeEditable();
+  await expect(firstName).toBeEnabled();
 
-    // verify visible
-
-    await expect(firstName).toBeVisible();
-    await page.waitForTimeout(5000);
-
-    // verify empty
-    await expect(firstName).toBeEmpty();
-    await page.waitForTimeout(5000);
-
-    // verify editable
-    await expect(firstName).toBeEditable();
-    await page.waitForTimeout(5000);
-
-    //verify Enable
-    await expect(firstName).toBeEnabled();
-    await page.waitForTimeout(5000);
-
-    //Enter text
-    await firstName.fill('Anand Kumar');
-    await page.waitForTimeout(5000);
-})
+  await firstName.fill('Anand Kumar');
+  await expect(firstName).toHaveValue('Anand Kumar');
+});

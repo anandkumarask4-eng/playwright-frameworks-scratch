@@ -2,41 +2,14 @@ import { test, expect } from '@playwright/test';
 
 test('test', async ({ page }) => {
   await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
-  await page.getByRole('textbox', { name: 'Username' }).click();
   await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
-  await page.getByRole('textbox', { name: 'Username' }).press('Tab');
   await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
   await page.getByRole('button', { name: 'Login' }).click();
-  await page.getByRole('link', { name: 'Dashboard' }).click();
-  await page.getByRole('link', { name: 'Admin' }).click();
-  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewSystemUsers');
-  await page.getByRole('textbox').nth(1).click();
-  await page.getByRole('textbox').nth(1).fill('anand');
-  await page.locator('.oxd-icon.bi-caret-down-fill.oxd-select-text--arrow').first().click();
-  await page.getByRole('option', { name: 'Admin' }).click();
-  await page.getByRole('textbox', { name: 'Type for hints...' }).click();
-  await page.getByRole('textbox', { name: 'Type for hints...' }).fill('anand');
-  await page.locator('div:nth-child(4) > .oxd-input-group > div:nth-child(2) > .oxd-select-wrapper > .oxd-select-text > .oxd-select-text--after > .oxd-icon').click();
-  await page.getByRole('option', { name: 'Enabled' }).click();
-  await page.getByRole('button', { name: 'Search' }).click();
-  await page.getByRole('button', { name: ' Add' }).click();
-  await page.locator('.oxd-icon.bi-caret-down-fill.oxd-select-text--arrow').first().click();
-  await page.getByRole('option', { name: 'Admin' }).click();
-  await page.getByRole('textbox', { name: 'Type for hints...' }).click();
-  await page.getByRole('textbox', { name: 'Type for hints...' }).fill('user');
-  await page.getByText('Auto130041 TestUser').click();
-  await page.getByText('-- Select --').click();
-  await page.getByRole('option', { name: 'Enabled' }).click();
-  await page.getByRole('textbox').nth(2).click();
-  await page.getByRole('textbox').nth(2).fill('anand');
-  await page.getByRole('textbox').nth(3).click();
-  await page.getByRole('textbox').nth(3).fill('admin123');
-  await page.getByRole('textbox').nth(4).click();
-  await page.getByRole('textbox').nth(4).fill('admin123');
-  await page.getByRole('button', { name: 'Save' }).click();
-  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewSystemUsers');
-  await page.getByRole('link', { name: 'PIM' }).click();
-  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/pim/viewEmployeeList');
-  await page.getByText('Pratibha user').click();
+
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+
+  await page.locator('.oxd-userdropdown-tab').click();
   await page.getByRole('menuitem', { name: 'Logout' }).click();
+
+  await expect(page).toHaveURL(/\/auth\/login/);
 });

@@ -3,8 +3,8 @@ class HomePage{
 
     constructor(page){
     this.page = page;
-    this.productList = '//div[@id="tbodyid"]/div/div/div/h4/a';
-    this.addCard     = '//a[normalize-space()="Add to cart"]';
+    this.productList = '.card-title a';
+    this.addCard     = 'text=Add to cart';
     this.carClick = '#cartur';
     
     }
@@ -14,15 +14,18 @@ class HomePage{
         await product.waitFor({ state: 'visible', timeout: 15000 });
         await product.click();
 
-        this.page.once('dialog', async dialog => {
-            if (dialog.message().includes('Product added')) {
-                await dialog.accept();
-            }
-        });
+        await this.page.waitForURL(/prod\.html/, { timeout: 15000 });
 
-        const addToCartBtn = this.page.locator(this.addCard);
+        const addToCartBtn = this.page.getByText('Add to cart', { exact: true });
         await addToCartBtn.waitFor({ state: 'visible', timeout: 15000 });
+
+        const dialogPromise = this.page.waitForEvent('dialog');
         await addToCartBtn.click();
+
+        const dialog = await dialogPromise;
+        if (dialog.message().includes('Product added')) {
+            await dialog.accept();
+        }
     }
 
     async gotoAddCart(){

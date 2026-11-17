@@ -1,24 +1,15 @@
-import {test , expect} from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test('Multple web Element', async ({page}) =>{
+test('Multple web Element', async ({ page }) => {
+  await page.goto('https://www.demoblaze.com/');
 
-    await page.goto("https://www.demoblaze.com/");
-    /*   const links = await page.$$('a');
-       for(const link of links){
-     const linkText = await link.textContent();
-       console.log(linkText);
- } */
+  await page.waitForSelector("//div[@id='tbodyid']//h4/a");
+  const products = await page.$$("//div[@id='tbodyid']//h4/a");
 
-       // locate all the products displayed on home page
+  expect(products.length).toBeGreaterThan(0);
 
-       page.waitForSelector("//div[@id='tbodyid']//h4/a");
-    const products = await page.$$("//div[@id='tbodyid']//h4/a");
-
-    for(const product of products){
+  for (const product of products) {
     const productName = await product.textContent();
-        console.log(productName);
-
-        
-        
-    }
-})
+    console.log(productName);
+  }
+});
