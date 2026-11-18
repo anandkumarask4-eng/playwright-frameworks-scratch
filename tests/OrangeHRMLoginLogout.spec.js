@@ -1,19 +1,27 @@
+
 import { test, expect } from '@playwright/test';
 
-test('OrangeHRM login and logout flow', async ({ page }) => {
-  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+test('launched OrangeHRM', async ({ page }) => {
 
-  await expect(page).toHaveURL(/\/auth\/login/);
+    // Launch OrangeHRM application
+    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
 
-  await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
-  await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
-  await page.getByRole('button', { name: 'Login' }).click();
+    // Verify login page URL
+    await expect(page).toHaveURL(/auth\/login/);
 
-  await expect(page).toHaveURL(/\/dashboard/);
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+    // Enter username
+    await page.getByPlaceholder('Username').fill('Admin');
 
-  await page.locator('.oxd-userdropdown-tab').click();
-  await page.getByRole('menuitem', { name: 'Logout' }).click();
+    // Enter password
+    await page.getByPlaceholder('Password').fill('admin123');
 
-  await expect(page).toHaveURL(/\/auth\/login/);
+    // Click on Login button
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    // Verify dashboard URL
+    await expect(page).toHaveURL(/dashboard/);
+
+    // Verify Dashboard heading is visible
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+
 });

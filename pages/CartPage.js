@@ -6,26 +6,37 @@ exports.CartPage = class CartPage {
     }
 
     async checkProductInCart(productName) {
-        const expectedName = (productName || '').trim().toLowerCase();
-        const rows = this.page.locator('#tbodyid tr');
+        const expectedName = (productName || '').trim();
+        const matchingRow = this.page.locator('#tbodyid tr').filter({
+            hasText: expectedName
+        });
 
-        await rows.first().waitFor({ state: 'visible', timeout: 15000 }).catch(() => {});
-
-        for (let attempt = 0; attempt < 20; attempt++) {
-            const count = await rows.count();
+        try {
+            await matchingRow.first().waitFor({ state: 'visible', timeout: 15000 });
+            const count = await matchingRow.count();
 
             for (let i = 0; i < count; i++) {
-                const text = ((await rows.nth(i).textContent()) || '').replace(/\s+/g, ' ').trim().toLowerCase();
+                const text = ((await matchingRow.nth(i).locator('td').nth(1).textContent()) || '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
                 console.log('Cart item:', text);
-                if (text.includes(expectedName)) {
+
+                if (text === expectedName) {
                     return true;
                 }
             }
+        } catch (error) {
+            const visibleItems = this.page.locator(this.noOfProducts);
+            const count = await visibleItems.count();
 
-            if (count > 0) {
-                await this.page.waitForTimeout(500);
-            } else {
-                await this.page.waitForTimeout(500);
+            for (let i = 0; i < count; i++) {
+                const text = ((await visibleItems.nth(i).textContent()) || '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+                console.log('Cart item:', text);
+                if (text === expectedName) {
+                    return true;
+                }
             }
         }
 
